@@ -1,8 +1,14 @@
 package com.whataplabs.task.product.whataplabstaskproduct.domain;
 
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Product {
     private Long id;
     private String name;
