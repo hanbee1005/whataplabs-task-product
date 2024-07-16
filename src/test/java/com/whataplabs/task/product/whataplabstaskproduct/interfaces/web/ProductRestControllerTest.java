@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whataplabs.task.product.whataplabstaskproduct.application.service.ProductService;
 import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
 import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductWithPageInfo;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductNotFoundException;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.request.AddProductRequest;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.request.GetProductsRequest;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.request.UpdateProductRequest;
@@ -50,10 +51,27 @@ class ProductRestControllerTest {
         mockMvc.perform(get("/products/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value("test item 1"))
-                .andExpect(jsonPath("$.price").value(1200))
-                .andExpect(jsonPath("$.amount").value(3))
+                .andExpect(jsonPath("$.data.id").value(id))
+                .andExpect(jsonPath("$.data.name").value("test item 1"))
+                .andExpect(jsonPath("$.data.price").value(1200))
+                .andExpect(jsonPath("$.data.amount").value(3))
+        ;
+    }
+
+    @Test
+    @DisplayName("id로 상품 조회 시 id 가 없는 경우 에러")
+    public void getProductFail() throws Exception {
+        // given
+        Long id = -1L;
+        given(service.getProduct(anyLong())).willThrow(ProductNotFoundException.class);
+
+        // when
+        // then
+        mockMvc.perform(get("/products/-1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.code").value("NOT_FOUND_PRODUCT"))
+                .andExpect(jsonPath("$.message").value("존재하지 않는 상품입니다."))
         ;
     }
 
@@ -80,9 +98,9 @@ class ProductRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalPages").value(2))
-                .andExpect(jsonPath("$.page").value(0))
-                .andExpect(jsonPath("$.size").value(3))
+                .andExpect(jsonPath("$.data.totalPages").value(2))
+                .andExpect(jsonPath("$.data.page").value(0))
+                .andExpect(jsonPath("$.data.size").value(3))
         ;
     }
 
@@ -102,10 +120,10 @@ class ProductRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(22))
-                .andExpect(jsonPath("$.name").value("test item 22"))
-                .andExpect(jsonPath("$.price").value(1200))
-                .andExpect(jsonPath("$.amount").value(3))
+                .andExpect(jsonPath("$.data.id").value(22))
+                .andExpect(jsonPath("$.data.name").value("test item 22"))
+                .andExpect(jsonPath("$.data.price").value(1200))
+                .andExpect(jsonPath("$.data.amount").value(3))
         ;
     }
 
@@ -122,7 +140,7 @@ class ProductRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("ok"))
+                .andExpect(jsonPath("$.data").value(1))
         ;
     }
 
@@ -137,7 +155,7 @@ class ProductRestControllerTest {
         mockMvc.perform(delete("/products/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("ok"))
+                .andExpect(jsonPath("$.data").value(1))
         ;
     }
 

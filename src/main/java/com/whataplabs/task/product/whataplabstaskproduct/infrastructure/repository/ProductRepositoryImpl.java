@@ -1,7 +1,7 @@
 package com.whataplabs.task.product.whataplabstaskproduct.infrastructure.repository;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
-import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductNotFoundException;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductNotFoundException;
 import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

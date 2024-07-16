@@ -1,6 +1,7 @@
 package com.whataplabs.task.product.whataplabstaskproduct.application.service;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.*;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;

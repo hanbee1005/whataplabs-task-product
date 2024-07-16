@@ -5,6 +5,7 @@ import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.request.
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.request.GetProductsRequest;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.request.UpdateProductRequest;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.response.AddProductResponse;
+import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.response.CommonResponse;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.response.GetProductResponse;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.response.GetProductsResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,32 +22,32 @@ public class ProductRestController {
     private final ProductService service;
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<GetProductResponse> getProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(GetProductResponse.from(service.getProduct(id)));
+    public ResponseEntity<CommonResponse<GetProductResponse>> getProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(CommonResponse.ok(GetProductResponse.from(service.getProduct(id))));
     }
 
     @GetMapping("/products")
-    public ResponseEntity<GetProductsResponse> getProducts(@Valid GetProductsRequest request) {
-        return ResponseEntity.ok(GetProductsResponse.from(
-                service.getProductsByPagination(request.page(), request.size(), request.sortType())
-        ));
+    public ResponseEntity<CommonResponse<GetProductsResponse>> getProducts(@Valid GetProductsRequest request) {
+        return ResponseEntity.ok(CommonResponse.ok(
+                GetProductsResponse.from(service.getProductsByPagination(request.page(), request.size(), request.sortType())
+        )));
     }
 
     @PostMapping("/products")
-    public ResponseEntity<AddProductResponse> addProduct(@RequestBody @Valid AddProductRequest request) {
-        return ResponseEntity.ok(AddProductResponse.from(service.addProduct(request.to())));
+    public ResponseEntity<CommonResponse<AddProductResponse>> addProduct(@RequestBody @Valid AddProductRequest request) {
+        return ResponseEntity.ok(CommonResponse.ok(AddProductResponse.from(service.addProduct(request.to()))));
     }
 
     @PatchMapping("/products/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id,
+    public ResponseEntity<CommonResponse<Object>> updateProduct(@PathVariable Long id,
                                                 @RequestBody @Valid UpdateProductRequest request) {
         service.updateProduct(request.to(id));
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(CommonResponse.ok(id));
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<CommonResponse<Object>> deleteProduct(@PathVariable Long id) {
         service.deleteProduct(id);
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(CommonResponse.ok(id));
     }
 }

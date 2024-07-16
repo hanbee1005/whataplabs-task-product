@@ -1,7 +1,7 @@
 package com.whataplabs.task.product.whataplabstaskproduct.infrastructure.repository;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
-import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductNotFoundException;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
