@@ -38,7 +38,7 @@ public class ProductRestController {
         return ResponseEntity.ok(CommonResponse.ok(AddProductResponse.from(service.addProduct(request.to()))));
     }
 
-    @PatchMapping("/products/{id}")
+    @PutMapping("/products/{id}")
     public ResponseEntity<CommonResponse<Object>> updateProduct(@PathVariable Long id,
                                                 @RequestBody @Valid UpdateProductRequest request) {
         service.updateProduct(request.to(id));
