@@ -1,10 +1,10 @@
 package com.whataplabs.task.product.whataplabstaskproduct.domain;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +31,7 @@ public class FakeProductRepository implements ProductRepository {
     }
 
     @Override
-    public List<Product> getProductsByPagination(Pageable pageable) {
+    public Page<Product> getProductsByPagination(Pageable pageable) {
         return null;
     }
 

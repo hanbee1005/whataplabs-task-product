@@ -6,6 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,6 +43,22 @@ class ProductRepositoryImplTest {
         // when
         // then
         assertThat(repository.getProduct(id)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("상품 조회 (with. paging)")
+    public void getProducts() {
+        // given
+        Pageable pageable = PageRequest.of(0, 3);
+
+        // when
+        Page<Product> products = repository.getProductsByPagination(pageable);
+
+        // then
+        assertThat(products).isNotNull();
+        assertThat(products.getTotalPages()).isGreaterThanOrEqualTo(2);
+        assertThat(products.getTotalElements()).isGreaterThanOrEqualTo(4);
+        assertThat(products.getSize()).isEqualTo(3);
     }
 
     @Test

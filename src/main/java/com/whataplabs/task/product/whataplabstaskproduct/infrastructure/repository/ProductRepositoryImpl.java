@@ -5,11 +5,11 @@ import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductNotFoundE
 import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -24,8 +24,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> getProductsByPagination(Pageable pageable) {
-        return null;
+    public Page<Product> getProductsByPagination(Pageable pageable) {
+        return jpaRepository.findAll(pageable).map(ProductEntity::toDomain);
     }
 
     @Override
