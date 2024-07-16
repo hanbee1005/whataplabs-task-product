@@ -1,12 +1,8 @@
 package com.whataplabs.task.product.whataplabstaskproduct.application.service;
 
-import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
-import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductNotFoundException;
-import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductRepository;
-import com.whataplabs.task.product.whataplabstaskproduct.domain.SortType;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,9 +22,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> getProductsByPagination(int page, int size, SortType sortType) {
+    public ProductWithPageInfo getProductsByPagination(int page, int size, SortType sortType) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortType.getOrder()));
-        return repository.getProductsByPagination(pageable);
+        return ProductWithPageInfo.of(repository.getProductsByPagination(pageable));
     }
 
     @Transactional
