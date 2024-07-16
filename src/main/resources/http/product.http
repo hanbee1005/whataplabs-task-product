@@ -1,0 +1,28 @@
+### id로 상품 조회
+GET http://localhost:9090/products/101
+
+### 상폼 목록 조회
+GET http://localhost:9090/products?page=0&size=3&sort=price
+
+### 상품 등록
+POST http://localhost:9090/products
+content-type: application/json
+
+{
+  "name": "item 1234",
+  "price": 12000,
+  "amount": 30
+}
+
+### 상품 수정
+PUT http://localhost:9090/products/105
+content-type: application/json
+
+{
+  "name": "item 1234",
+  "price": 32000,
+  "amount": 7
+}
+
+### 상품 삭제
+DELETE http://localhost:9090/products/104
