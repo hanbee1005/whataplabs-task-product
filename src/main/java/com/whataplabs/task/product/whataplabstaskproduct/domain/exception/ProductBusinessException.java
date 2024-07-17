@@ -16,4 +16,8 @@ public abstract class ProductBusinessException extends RuntimeException {
     public String getErrorMessage(){
         return getMessage() == null || getMessage().isBlank() ? getErrorType().getDefaultMessage() : getMessage();
     }
+
+    public <T> T getData() {
+        return null;
+    }
 }

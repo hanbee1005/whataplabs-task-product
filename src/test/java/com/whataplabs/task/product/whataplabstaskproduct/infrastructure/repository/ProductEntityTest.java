@@ -1,6 +1,7 @@
 package com.whataplabs.task.product.whataplabstaskproduct.infrastructure.repository;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.InsufficientStockException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -83,6 +84,19 @@ class ProductEntityTest {
         assertThrows(IllegalArgumentException.class,
                 () -> entity.update(Product.builder().name("test item 1").price(BigDecimal.valueOf(567)).amount(-34).build()),
                 "수량은 0 또는 양수여야 합니다. amount=" + -34);
+    }
+
+    @Test
+    @DisplayName("현재 상품의 개수보다 많은 상품을 주문하면 재고 차감에 실패합니다.")
+    public void deductStockFail() {
+        // given
+        Product product = Product.builder().name("test item 1").price(BigDecimal.valueOf(1234)).amount(5).build();
+        ProductEntity entity = ProductEntity.create(product);
+
+        // when
+        // then
+        assertThrows(InsufficientStockException.class, () -> entity.deductAmount(10),
+                "상품의 재고가 충분하지 않습니다. id=" + entity.getId());
     }
 
 }

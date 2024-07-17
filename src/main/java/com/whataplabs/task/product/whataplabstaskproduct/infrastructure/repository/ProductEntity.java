@@ -1,6 +1,7 @@
 package com.whataplabs.task.product.whataplabstaskproduct.infrastructure.repository;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.InsufficientStockException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -76,5 +77,14 @@ public class ProductEntity {
         }
 
         this.amount = amount;
+    }
+
+    public void deductAmount(int quantity) {
+        try {
+            changeAmount(amount - quantity);
+            lastModifiedAt = LocalDateTime.now();
+        } catch (Exception e) {
+            throw new InsufficientStockException(id);
+        }
     }
 }
