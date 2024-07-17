@@ -26,6 +26,9 @@ public class ProductEntity {
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 
+    @Version
+    private int version;
+
     public static ProductEntity create(Product product) {
         ProductEntity entity = new ProductEntity();
         entity.changeName(product.getName());

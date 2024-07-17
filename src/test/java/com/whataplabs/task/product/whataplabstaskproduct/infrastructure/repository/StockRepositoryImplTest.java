@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -78,6 +79,59 @@ class StockRepositoryImplTest {
         // then
         assertThrows(InsufficientStockException.class, () -> repository.deduct(orderedProduct),
                 "상품의 재고가 충분하지 않습니다. id=" + productId);
+    }
+
+    @Test
+    @DisplayName("하나의 상품에 대해 동시에 재고 차감 요청이 오는 경우 하나만 성공하고 다른 요청은 실패합니다.")
+    public void deductStockConcurrent() throws InterruptedException {
+        Long productId = products.get(1);
+
+        int numberOfThreads = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(numberOfThreads);
+
+        Callable<Integer> task = () -> {
+            try {
+                latch.await(); // Wait until all threads are ready
+                OrderedProduct orderedProduct = OrderedProduct.builder()
+                        .productId(productId)
+                        .quantity(1)
+                        .unitPrice(BigDecimal.valueOf(2000))
+                        .build();
+                return repository.deduct(orderedProduct);
+            } catch (Exception e) {
+                return 0;
+            } finally {
+                doneLatch.countDown();
+            }
+        };
+
+        List<Future<Integer>> futures = new ArrayList<>();
+        for (int i = 0; i < numberOfThreads; i++) {
+            futures.add(executor.submit(task));
+        }
+
+        latch.countDown(); // Let all threads proceed
+        doneLatch.await(); // Wait for all threads to finish
+
+        int successCount = 0;
+        int failureCount = 0;
+
+        for (Future<Integer> future : futures) {
+            try {
+                if (future.get() == 1) {
+                    successCount++;
+                } else {
+                    failureCount++;
+                }
+            } catch (ExecutionException e) {
+                failureCount++;
+            }
+        }
+
+        assertThat(successCount).isEqualTo(1);
+        assertThat(failureCount).isEqualTo(numberOfThreads - 1);
     }
 
     private List<Product> testProducts() {
