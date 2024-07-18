@@ -22,4 +22,13 @@ public class StockRepositoryImpl implements StockRepository {
         entity.deductAmount(product.getQuantity());
         return 1;
     }
+
+    @Override
+    @Transactional
+    public int restock(OrderedProduct product) {
+        ProductEntity entity = jpaRepository.findById(product.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException(product.getProductId()));
+        entity.restockAmount(product.getQuantity());
+        return 1;
+    }
 }

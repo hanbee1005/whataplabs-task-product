@@ -30,4 +30,19 @@ public class StockManager {
 
         return successIds;
     }
+
+    @Transactional
+    public List<Long> restock(List<OrderedProduct> products) {
+        List<Long> successIds = new ArrayList<>();
+        for (OrderedProduct product : products) {
+            int affected = repository.restock(product);
+            if (affected == 0) {
+                throw new IllegalStateException("product restock fail");
+            }
+
+            successIds.add(product.getProductId());
+        }
+
+        return successIds;
+    }
 }

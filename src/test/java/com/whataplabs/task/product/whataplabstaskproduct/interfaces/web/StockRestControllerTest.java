@@ -78,4 +78,49 @@ class StockRestControllerTest {
                 .andExpect(jsonPath("$.message").value("상품의 재고가 충분하지 않습니다."))
                 ;
     }
+
+    @Test
+    @DisplayName("재고 롤백 성공")
+    public void restock() throws Exception {
+        // given
+        ProductOrderRequest request = new ProductOrderRequest(List.of(
+                new OrderedProductRequest(1L, 5, BigDecimal.valueOf(1000)),
+                new OrderedProductRequest(2L, 1, BigDecimal.valueOf(2000)),
+                new OrderedProductRequest(3L, 4, BigDecimal.valueOf(1500))
+        ));
+        given(stockManager.restock(any())).willReturn(List.of(1L, 2L, 3L));
+
+        // when
+        // then
+        MvcResult result = mockMvc.perform(post("/products/order/cancel")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        assertTrue(content.contains("\"products\":[1,2,3]"));
+    }
+
+    @Test
+    @DisplayName("재고 롤백 실패")
+    public void restockFail() throws Exception {
+        // given
+        ProductOrderRequest request = new ProductOrderRequest(List.of(
+                new OrderedProductRequest(1L, -15, BigDecimal.valueOf(1000)),
+                new OrderedProductRequest(2L, 8, BigDecimal.valueOf(2000)),
+                new OrderedProductRequest(3L, 4, BigDecimal.valueOf(1500))
+        ));
+        given(stockManager.restock(any())).willThrow(InsufficientStockException.class);
+
+        // when
+        // then
+        mockMvc.perform(post("/products/order/cancel")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.code").value("INSUFFICIENT_STOCK"))
+                .andExpect(jsonPath("$.message").value("상품의 재고가 충분하지 않습니다."))
+        ;
+    }
 }

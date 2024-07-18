@@ -134,6 +134,99 @@ class StockRepositoryImplTest {
         assertThat(failureCount).isEqualTo(numberOfThreads - 1);
     }
 
+    @Test
+    @DisplayName("재고 롤백 성공")
+    public void restock() {
+        // given
+        Long productId = products.get(0);
+        OrderedProduct orderedProduct = OrderedProduct.builder()
+                .productId(productId)
+                .quantity(2)
+                .unitPrice(BigDecimal.valueOf(1000))
+                .build();
+
+        ProductEntity before = productJpaRepository.findById(productId).get();
+
+        // when
+        int affected = repository.restock(orderedProduct);
+        ProductEntity restocked = productJpaRepository.findById(productId).orElse(null);
+
+        // then
+        assertThat(affected).isEqualTo(1);
+        assertThat(restocked).isNotNull();
+        assertThat(restocked.getAmount()).isEqualTo(before.getAmount() + 2);
+    }
+
+    @Test
+    @DisplayName("재고 차감 실패")
+    public void restockFail() {
+        // given
+        Long productId = products.get(0);
+        OrderedProduct orderedProduct = OrderedProduct.builder()
+                .productId(productId)
+                .quantity(-100)
+                .unitPrice(BigDecimal.valueOf(1000))
+                .build();
+
+        // when
+        // then
+        assertThrows(InsufficientStockException.class, () -> repository.restock(orderedProduct),
+                "상품의 재고가 충분하지 않습니다. id=" + productId);
+    }
+
+    @Test
+    @DisplayName("하나의 상품에 대해 동시에 재고 롤백 요청이 오는 경우 하나만 성공하고 다른 요청은 실패합니다.")
+    public void restockConcurrent() throws InterruptedException {
+        Long productId = products.get(1);
+
+        int numberOfThreads = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+        CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch doneLatch = new CountDownLatch(numberOfThreads);
+
+        Callable<Integer> task = () -> {
+            try {
+                latch.await(); // Wait until all threads are ready
+                OrderedProduct orderedProduct = OrderedProduct.builder()
+                        .productId(productId)
+                        .quantity(1)
+                        .unitPrice(BigDecimal.valueOf(2000))
+                        .build();
+                return repository.restock(orderedProduct);
+            } catch (Exception e) {
+                return 0;
+            } finally {
+                doneLatch.countDown();
+            }
+        };
+
+        List<Future<Integer>> futures = new ArrayList<>();
+        for (int i = 0; i < numberOfThreads; i++) {
+            futures.add(executor.submit(task));
+        }
+
+        latch.countDown(); // Let all threads proceed
+        doneLatch.await(); // Wait for all threads to finish
+
+        int successCount = 0;
+        int failureCount = 0;
+
+        for (Future<Integer> future : futures) {
+            try {
+                if (future.get() == 1) {
+                    successCount++;
+                } else {
+                    failureCount++;
+                }
+            } catch (ExecutionException e) {
+                failureCount++;
+            }
+        }
+
+        assertThat(successCount).isEqualTo(1);
+        assertThat(failureCount).isEqualTo(numberOfThreads - 1);
+    }
+
     private List<Product> testProducts() {
         return List.of(
                 Product.builder().name("test item 1").price(BigDecimal.valueOf(1000)).amount(5).createdAt(LocalDateTime.now()).build(),

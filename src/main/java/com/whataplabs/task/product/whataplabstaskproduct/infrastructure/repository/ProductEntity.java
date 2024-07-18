@@ -90,4 +90,13 @@ public class ProductEntity {
             throw new InsufficientStockException(id);
         }
     }
+
+    public void restockAmount(int quantity) {
+        try {
+            changeAmount(amount + quantity);
+            lastModifiedAt = LocalDateTime.now();
+        } catch (Exception e) {
+            throw new InsufficientStockException(id);
+        }
+    }
 }

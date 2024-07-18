@@ -25,4 +25,10 @@ public class StockRestController {
         List<Long> deducted = stockManager.deductStock(request.orderedProducts());
         return ResponseEntity.ok(CommonResponse.ok(new ProductOrderResponse(deducted)));
     }
+
+    @PostMapping("/products/order/cancel")
+    public ResponseEntity<CommonResponse<ProductOrderResponse>> productOrderCancel(@RequestBody @Valid ProductOrderRequest request) {
+        List<Long> restocked = stockManager.restock(request.orderedProducts());
+        return ResponseEntity.ok(CommonResponse.ok(new ProductOrderResponse(restocked)));
+    }
 }
