@@ -14,6 +14,7 @@ public enum ErrorType {
     INVALID_PRODUCT_AMOUNT(400103, "INVALID_PRODUCT_AMOUNT", "유효하지 않은 상품 수량입니다."),
 
     NOT_FOUND_PRODUCT(400201, "NOT_FOUND_PRODUCT", "존재하지 않는 상품입니다."),
+    INSUFFICIENT_STOCK(400202, "INSUFFICIENT_STOCK", "상품의 재고가 충분하지 않습니다."),
     ;
 
     private final int status;

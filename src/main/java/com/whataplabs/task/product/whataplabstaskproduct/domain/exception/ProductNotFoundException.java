@@ -12,4 +12,9 @@ public class ProductNotFoundException extends ProductBusinessException {
     public ErrorType getErrorType() {
         return ErrorType.NOT_FOUND_PRODUCT;
     }
+
+    @Override
+    public <T> T getData() {
+        return (T) id;
+    }
 }

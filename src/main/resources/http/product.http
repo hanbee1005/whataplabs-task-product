@@ -26,3 +26,65 @@ content-type: application/json
 
 ### 상품 삭제
 DELETE http://localhost:9090/products/104
+
+### 상품 주문
+POST http://localhost:9090/products/order
+content-type: application/json
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 2,
+      "unitPrice": 1000
+    },
+    {
+      "productId": 102,
+      "quantity": 1,
+      "unitPrice": 1500
+    },
+    {
+      "productId": 103,
+      "quantity": 4,
+      "unitPrice": 2000
+    }
+  ]
+}
+
+### 상품 주문 실패 - 재고 부족
+POST http://localhost:9090/products/order
+content-type: application/json
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 2,
+      "unitPrice": 1000
+    },
+    {
+      "productId": 102,
+      "quantity": 7,
+      "unitPrice": 1500
+    },
+    {
+      "productId": 103,
+      "quantity": 4,
+      "unitPrice": 2000
+    }
+  ]
+}
+
+### 상품 주문 실패 - 존재하지 않는 상품
+POST http://localhost:9090/products/order
+content-type: application/json
+
+{
+  "orderProducts": [
+    {
+      "productId": 999,
+      "quantity": 2,
+      "unitPrice": 1000
+    }
+  ]
+}

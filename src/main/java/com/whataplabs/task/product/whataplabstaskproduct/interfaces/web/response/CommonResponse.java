@@ -16,7 +16,7 @@ public record CommonResponse<T>(
     }
 
     public static <T> CommonResponse<T> of(ProductBusinessException exception) {
-        return new CommonResponse<>(exception.getErrorCode(), exception.getErrorMessage(), null);
+        return new CommonResponse<>(exception.getErrorCode(), exception.getErrorMessage(), exception.getData());
     }
 
     public static <T> CommonResponse<T> of(ErrorResponse response) {

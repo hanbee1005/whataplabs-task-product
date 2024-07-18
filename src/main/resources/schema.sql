@@ -8,6 +8,6 @@ CREATE TABLE PRODUCT (
     amount integer NOT NULL,
     created_at timestamp default now(),
     last_modified_at timestamp,
-    version integer,
+    version integer default 0,
     primary key (product_id)
 );

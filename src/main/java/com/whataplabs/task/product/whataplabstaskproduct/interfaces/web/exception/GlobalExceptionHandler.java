@@ -1,5 +1,6 @@
 package com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.exception;
 
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.InsufficientStockException;
 import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductBusinessException;
 import com.whataplabs.task.product.whataplabstaskproduct.interfaces.web.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<CommonResponse<CommonResponse<Object>>> handleInsufficientStockException(InsufficientStockException ex) {
+        log.error("[GlobalExceptionHandler.handleInsufficientStockException] message={}", ex.getErrorMessage());
+        return ResponseEntity.status(400).body(CommonResponse.of(ex));
+    }
 
     @ExceptionHandler(ProductBusinessException.class)
     public ResponseEntity<CommonResponse<ErrorResponse>> handleProductException(ProductBusinessException ex) {
