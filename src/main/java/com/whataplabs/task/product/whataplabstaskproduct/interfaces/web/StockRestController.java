@@ -20,13 +20,13 @@ import java.util.List;
 public class StockRestController {
     private final StockManager stockManager;
 
-    @PostMapping("/products/order")
+    @PostMapping("/products/stock/deduct")
     public ResponseEntity<CommonResponse<ProductOrderResponse>> productOrder(@RequestBody @Valid ProductOrderRequest request) {
         List<Long> deducted = stockManager.deductStock(request.orderedProducts());
         return ResponseEntity.ok(CommonResponse.ok(new ProductOrderResponse(deducted)));
     }
 
-    @PostMapping("/products/order/cancel")
+    @PostMapping("/products/stock/add")
     public ResponseEntity<CommonResponse<ProductOrderResponse>> productOrderCancel(@RequestBody @Valid ProductOrderRequest request) {
         List<Long> restocked = stockManager.restock(request.orderedProducts());
         return ResponseEntity.ok(CommonResponse.ok(new ProductOrderResponse(restocked)));
