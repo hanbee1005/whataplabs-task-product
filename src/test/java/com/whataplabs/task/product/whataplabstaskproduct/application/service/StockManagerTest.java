@@ -147,7 +147,7 @@ class StockManagerTest {
     }
 
     @Test
-    @DisplayName("동일한 상품이 하나라도 포함된 경우 하나의 요청만 성공하고 다른 요청은 실패합니다.")
+    @DisplayName("동일한 상품이 다른 요청에 같이 있더라도 재고가 있으면 둘다 성공한다. (redisson 분산 락 적용")
     public void deductStockConcurrent2() throws InterruptedException {
         int numberOfThreads = 2;
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
@@ -206,8 +206,8 @@ class StockManagerTest {
             }
         }
 
-        assertThat(successCount).isEqualTo(1);
-        assertThat(failureCount).isEqualTo(1);
+        assertThat(successCount).isEqualTo(2);
+        assertThat(failureCount).isEqualTo(0);
     }
 
     @Test
@@ -221,11 +221,11 @@ class StockManagerTest {
         );
 
         // when
-        List<Long> deducted = stockManager.restock(orderedProducts);
+        List<Long> restocked = stockManager.restock(orderedProducts);
 
         // then
-        for (int i = 0; i < deducted.size(); i++) {
-            ProductEntity entity = productJpaRepository.findById(deducted.get(i)).orElse(null);
+        for (int i = 0; i < restocked.size(); i++) {
+            ProductEntity entity = productJpaRepository.findById(restocked.get(i)).orElse(null);
             assertThat(entity).isNotNull();
             assertThat(entity.getId()).isEqualTo(products.get(i).getId());
             assertThat(entity.getAmount()).isEqualTo(products.get(i).getAmount() + orderedProducts.get(i).getQuantity());
@@ -312,7 +312,7 @@ class StockManagerTest {
     }
 
     @Test
-    @DisplayName("동일한 상품이 하나라도 포함된 경우 재고 롤백에 대한 하나의 요청만 성공하고 다른 요청은 실패합니다.")
+    @DisplayName("동일한 상품이 여러 주문에 포함되어 있어도 락 시간 내에 해결되면 모두 성공합니다. (redisson 분산 락 적용)")
     public void restockConcurrent2() throws InterruptedException {
         int numberOfThreads = 2;
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
@@ -371,8 +371,8 @@ class StockManagerTest {
             }
         }
 
-        assertThat(successCount).isEqualTo(1);
-        assertThat(failureCount).isEqualTo(1);
+        assertThat(successCount).isEqualTo(2);
+        assertThat(failureCount).isEqualTo(0);
     }
 
     private List<Product> testProducts() {

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorType {
     INTERNAL_SERVER_ERROR(500001, "INTERNAL_SERVER_ERROR", "알 수 없는 서버 에러가 발생하였습니다."),
+    LOCK_ACQUISITION_FAILED(500001, "LOCK_ACQUISITION_FAILED", "락 획득에 실패하였습니다."),
 
     BAD_REQUEST(400001, "BAD_REQUEST", "잘못된 요청 파라미터입니다."),
     INVALID_PRODUCT_NAME(400101, "INVALID_PRODUCT_NAME", "유효하지 않은 상품명입니다."),

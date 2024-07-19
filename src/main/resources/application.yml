@@ -21,6 +21,11 @@ spring:
         use_sql_comments: false
     open-in-view: false
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 server:
   servlet:
     context-path: /

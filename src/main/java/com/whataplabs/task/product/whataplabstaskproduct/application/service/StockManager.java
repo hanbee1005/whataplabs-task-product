@@ -2,10 +2,10 @@ package com.whataplabs.task.product.whataplabstaskproduct.application.service;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.OrderedProduct;
 import com.whataplabs.task.product.whataplabstaskproduct.domain.StockRepository;
+import com.whataplabs.task.product.whataplabstaskproduct.infrastructure.handler.LockHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,33 +14,41 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StockManager {
-    private final StockRepository repository;
+    public static String STOCK_LOCK_PREFIX = "PRODUCT_STOCK_";
 
-    @Transactional
+    private final StockRepository repository;
+    private final LockHandler lockHandler;
+
     public List<Long> deductStock(List<OrderedProduct> products) {
         List<Long> successIds = new ArrayList<>();
         for (OrderedProduct product : products) {
-            int affected = repository.deduct(product);
-            if (affected == 0) {
-                throw new IllegalStateException("product deduct stock fail");
-            }
+            Long id = lockHandler.runOnLock(STOCK_LOCK_PREFIX + product.getProductId(), 2000L, 1000L, () -> {
+                int affected = repository.deduct(product);
+                if (affected == 0) {
+                    throw new IllegalStateException("product deduct stock fail");
+                }
 
-            successIds.add(product.getProductId());
+                return product.getProductId();
+            });
+
+            successIds.add(id);
         }
 
         return successIds;
     }
 
-    @Transactional
     public List<Long> restock(List<OrderedProduct> products) {
         List<Long> successIds = new ArrayList<>();
         for (OrderedProduct product : products) {
-            int affected = repository.restock(product);
-            if (affected == 0) {
-                throw new IllegalStateException("product restock fail");
-            }
+            Long id = lockHandler.runOnLock(STOCK_LOCK_PREFIX + product.getProductId(), 2000L, 1000L, () -> {
+                int affected = repository.restock(product);
+                if (affected == 0) {
+                    throw new IllegalStateException("product restock fail");
+                }
+                return product.getProductId();
+            });
 
-            successIds.add(product.getProductId());
+            successIds.add(id);
         }
 
         return successIds;

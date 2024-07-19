@@ -47,7 +47,7 @@ class StockRestControllerTest {
 
         // when
         // then
-        MvcResult result = mockMvc.perform(post("/products/order")
+        MvcResult result = mockMvc.perform(post("/products/stock/deduct")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -70,7 +70,7 @@ class StockRestControllerTest {
 
         // when
         // then
-        mockMvc.perform(post("/products/order")
+        mockMvc.perform(post("/products/stock/deduct")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError())
@@ -92,7 +92,7 @@ class StockRestControllerTest {
 
         // when
         // then
-        MvcResult result = mockMvc.perform(post("/products/order/cancel")
+        MvcResult result = mockMvc.perform(post("/products/stock/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -115,7 +115,7 @@ class StockRestControllerTest {
 
         // when
         // then
-        mockMvc.perform(post("/products/order/cancel")
+        mockMvc.perform(post("/products/stock/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().is4xxClientError())
