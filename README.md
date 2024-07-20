@@ -1,5 +1,6 @@
 # Whataplabs Task - PRODUCT
 상품 API를 제공하는 애플리케이션입니다. ```PORT: 9090```
+- [API 문서](http://localhost:9090/swagger-ui/index.html)
 
 ## 사용 기술
 - Java 17
