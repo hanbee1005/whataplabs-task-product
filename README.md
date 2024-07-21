@@ -100,6 +100,7 @@
     ```
 - 상품 목록 조회
   - ```GET /products?page=0&size=3&sort=price```: page, size, sort 정보를 입력 받아 페이징 된 상품 정보를 조회합니다.
+  - 상품 정렬 시 name 조건은 오름차순, price 또는 amount 조건은 내림차순으로 정렬됩니다.
   - response
     ```json
     {
