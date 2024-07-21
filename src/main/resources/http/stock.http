@@ -1,0 +1,27 @@
+### 상품 재고 차감
+POST http://localhost:9090/products/stock/deduct
+content-type: application/json
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 10,
+      "unitPrice": 1000
+    }
+  ]
+}
+
+### 상품 재고 추가
+POST http://localhost:9090/products/stock/add
+content-type: application/json
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 10,
+      "unitPrice": 1000
+    }
+  ]
+}
