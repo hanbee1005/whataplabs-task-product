@@ -1,3 +1,189 @@
+POST http://localhost:9090/products/stock/add
+content-type: application/json
+Content-Length: 110
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 10,
+      "unitPrice": 1000
+    }
+  ]
+}
+
+<> 2024-07-21T161812-1.200.json
+
+###
+
+POST http://localhost:9090/products/stock/deduct
+content-type: application/json
+Content-Length: 109
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 2,
+      "unitPrice": 1000
+    }
+  ]
+}
+
+<> 2024-07-21T161812.200.json
+
+###
+
+POST http://localhost:9090/products/order
+content-type: application/json
+Content-Length: 109
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "orderProducts": [
+    {
+      "productId": 999,
+      "quantity": 2,
+      "unitPrice": 1000
+    }
+  ]
+}
+
+<> 2024-07-21T161750-1.500.json
+
+###
+
+POST http://localhost:9090/products/order
+content-type: application/json
+Content-Length: 273
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 2,
+      "unitPrice": 1000
+    },
+    {
+      "productId": 102,
+      "quantity": 7,
+      "unitPrice": 1500
+    },
+    {
+      "productId": 103,
+      "quantity": 4,
+      "unitPrice": 2000
+    }
+  ]
+}
+
+<> 2024-07-21T161750.500.json
+
+###
+
+POST http://localhost:9090/products/order
+content-type: application/json
+Content-Length: 273
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "orderProducts": [
+    {
+      "productId": 101,
+      "quantity": 2,
+      "unitPrice": 1000
+    },
+    {
+      "productId": 102,
+      "quantity": 1,
+      "unitPrice": 1500
+    },
+    {
+      "productId": 103,
+      "quantity": 4,
+      "unitPrice": 2000
+    }
+  ]
+}
+
+<> 2024-07-21T161749.500.json
+
+###
+
+DELETE http://localhost:9090/products/104
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-07-21T161749-4.200.json
+
+###
+
+PUT http://localhost:9090/products/105
+content-type: application/json
+Content-Length: 58
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "name": "item 1234",
+  "price": 32000,
+  "amount": 7
+}
+
+<> 2024-07-21T161749-3.200.json
+
+###
+
+POST http://localhost:9090/products
+content-type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "name": "item 1234",
+  "price": 12000,
+  "amount": 30
+}
+
+<> 2024-07-21T161749-2.200.json
+
+###
+
+GET http://localhost:9090/products?page=0&size=3&sort=price
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-07-21T161749-1.200.json
+
+###
+
+GET http://localhost:9090/products/101
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-07-21T161749.200.json
+
+###
+
 PUT http://localhost:9090/products/105
 content-type: application/json
 Content-Length: 58

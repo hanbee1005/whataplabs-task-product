@@ -6,7 +6,7 @@ content-type: application/json
   "orderProducts": [
     {
       "productId": 101,
-      "quantity": 10,
+      "quantity": 2,
       "unitPrice": 1000
     }
   ]
