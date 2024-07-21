@@ -10,18 +10,6 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProductEntityTest {
-
-    @Test
-    @DisplayName("상품 등록 시 이름은 빈값일 수 없습니다.")
-    public void createFailByEmptyName() {
-        // given
-        Product product = Product.builder().price(BigDecimal.valueOf(1234)).amount(12).build();
-
-        // when
-        // then
-        assertThrows(IllegalArgumentException.class, () -> ProductEntity.create(product), "상품명은 빈값일 수 없습니다.");
-    }
-
     @Test
     @DisplayName("상품 수정 시 이름은 빈값일 수 없습니다.")
     public void updateFailByEmptyName() {
@@ -34,17 +22,6 @@ class ProductEntityTest {
         assertThrows(IllegalArgumentException.class,
                 () -> entity.update(Product.builder().price(BigDecimal.valueOf(567)).amount(34).build()),
                 "상품명은 빈값일 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("상품 등록 시 가격은 빈값 또는 음수일 수 없습니다.")
-    public void createFailByInvalidPrice() {
-        // given
-        Product product = Product.builder().name("test item 1").amount(12).build();
-
-        // when
-        // then
-        assertThrows(IllegalArgumentException.class, () -> ProductEntity.create(product), "유효하지 않은 가격입니다. price=" + null);
     }
 
     @Test

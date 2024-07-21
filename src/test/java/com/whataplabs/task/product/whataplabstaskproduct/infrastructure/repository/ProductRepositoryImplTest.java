@@ -108,7 +108,7 @@ class ProductRepositoryImplTest {
     @DisplayName("존재하지 않는 id의 상품 업데이트 시 실패")
     public void updateProductFail() {
         // given
-        Product updateProduct = Product.builder().id(-1L).build();
+        Product updateProduct = Product.builder().id(-1L).name("test item123").price(BigDecimal.valueOf(1000)).amount(10).build();
 
         // when
         // then
