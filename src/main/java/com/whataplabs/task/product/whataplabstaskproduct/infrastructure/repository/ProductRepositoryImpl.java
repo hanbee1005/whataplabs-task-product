@@ -1,8 +1,8 @@
 package com.whataplabs.task.product.whataplabstaskproduct.infrastructure.repository;
 
 import com.whataplabs.task.product.whataplabstaskproduct.domain.Product;
-import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductNotFoundException;
 import com.whataplabs.task.product.whataplabstaskproduct.domain.ProductRepository;
+import com.whataplabs.task.product.whataplabstaskproduct.domain.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,16 +19,19 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final ProductJpaRepository jpaRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Product> getProduct(Long id) {
         return jpaRepository.findById(id).map(ProductEntity::toDomain);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Product> getProductsByPagination(Pageable pageable) {
         return jpaRepository.findAll(pageable).map(ProductEntity::toDomain);
     }
 
     @Override
+    @Transactional
     public Product addProduct(Product product) {
         ProductEntity entity = ProductEntity.create(product);
         jpaRepository.save(entity);
@@ -46,6 +49,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    @Transactional
     public int deleteProduct(Long id) {
         ProductEntity entity = jpaRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
